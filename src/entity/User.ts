@@ -11,6 +11,7 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Department } from "./Department";
 
 @InputType()
 export class ICreateUser {
@@ -18,16 +19,31 @@ export class ICreateUser {
   _id?: string;
 
   @Field()
-  email!: string;
-
-  @Field()
   name!: string;
 
   @Field()
-  password!: string;
+  email!: string;
+
+  @Field()
+  hash!: string;
+
+  @Field()
+  isCustomer!: boolean;
+
+  @Field()
+  isMiddleMan!: boolean;
+
+  @Field()
+  isCompany!: boolean;
+
+  @Field()
+  assignedDepartment!: string;
 
   @Field()
   isAdmin!: boolean;
+
+  @Field()
+  isSuperAdmin!: boolean;
 
   @Field()
   isActive!: boolean;
@@ -63,6 +79,10 @@ export class User extends BaseEntity {
   @Field()
   @Column({ default: false })
   isCompany!: boolean;
+
+  @Field(() => Department, { nullable: true })
+  @ManyToOne((type) => Department, { nullable: true })
+  assignedDepartment!: Department;
 
   @Field()
   @Column({ default: false })
