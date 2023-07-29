@@ -84,15 +84,15 @@ export class Tickets extends BaseEntity {
 
   @Field(() => User, { nullable: true })
   @ManyToOne((type) => User, { nullable: true })
-  assignedCustomer!: User;
+  assignedCustomer!: User | null;
 
   @Field(() => User, { nullable: true })
   @ManyToOne((type) => User, { nullable: true })
-  assignedMiddleMan!: User;
+  assignedMiddleMan!: User | null;
 
   @Field(() => User, { nullable: true })
   @ManyToOne((type) => User, { nullable: true })
-  assignedCompany!: User;
+  assignedCompany!: User | null;
 
   @Field()
   @Column({ default: false })

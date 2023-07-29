@@ -55,13 +55,13 @@ export class AppTicketResolver {
           where: { _id: _id },
         });
 
-        findEmailCredential.assignedCompany = await User.findOneOrFail({
+        findEmailCredential.assignedCompany = await User.findOne({
           where: { _id: assignedCompany },
         });
-        findEmailCredential.assignedCustomer = await User.findOneOrFail({
+        findEmailCredential.assignedCustomer = await User.findOne({
           where: { _id: assignedCustomer },
         });
-        findEmailCredential.assignedMiddleMan = await User.findOneOrFail({
+        findEmailCredential.assignedMiddleMan = await User.findOne({
           where: { _id: assignedMiddleMan },
         });
         findEmailCredential.department = await Department.findOneOrFail({
@@ -81,13 +81,13 @@ export class AppTicketResolver {
       } else {
         const findEmailCredential = new Tickets();
 
-        findEmailCredential.assignedCompany = await User.findOneOrFail({
+        findEmailCredential.assignedCompany = await User.findOne({
           where: { _id: assignedCompany },
         });
-        findEmailCredential.assignedCustomer = await User.findOneOrFail({
+        findEmailCredential.assignedCustomer = await User.findOne({
           where: { _id: assignedCustomer },
         });
-        findEmailCredential.assignedMiddleMan = await User.findOneOrFail({
+        findEmailCredential.assignedMiddleMan = await User.findOne({
           where: { _id: assignedMiddleMan },
         });
         findEmailCredential.department = await Department.findOneOrFail({
