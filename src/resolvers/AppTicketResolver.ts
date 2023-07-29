@@ -33,6 +33,51 @@ export class AppTicketResolver {
 
   @Query(() => [Tickets])
   @UseMiddleware([isUser])
+  async getMyTicketByUser(@Ctx() { user }: MyContext): Promise<Tickets[]> {
+    return await Tickets.find({
+      relations: {
+        assignedCompany: true,
+        assignedCustomer: true,
+        assignedMiddleMan: true,
+        department: true,
+        departmentQuestion: true,
+      },
+      where: { assignedCustomer: { _id: user._id } },
+    });
+  }
+
+  @Query(() => [Tickets])
+  @UseMiddleware([isUser])
+  async getMyTicketByMiddleMan(@Ctx() { user }: MyContext): Promise<Tickets[]> {
+    return await Tickets.find({
+      relations: {
+        assignedCompany: true,
+        assignedCustomer: true,
+        assignedMiddleMan: true,
+        department: true,
+        departmentQuestion: true,
+      },
+      where: { assignedMiddleMan: { _id: user._id } },
+    });
+  }
+
+  @Query(() => [Tickets])
+  @UseMiddleware([isUser])
+  async getMyTicketByCompany(@Ctx() { user }: MyContext): Promise<Tickets[]> {
+    return await Tickets.find({
+      relations: {
+        assignedCompany: true,
+        assignedCustomer: true,
+        assignedMiddleMan: true,
+        department: true,
+        departmentQuestion: true,
+      },
+      where: { assignedCompany: { _id: user._id } },
+    });
+  }
+
+  @Query(() => [Tickets])
+  @UseMiddleware([isUser])
   async getAllAcceptAcceptByMiddleMan(
     @Ctx() { user }: MyContext
   ): Promise<Tickets[]> {
