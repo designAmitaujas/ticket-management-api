@@ -1,3 +1,4 @@
+import _ from "lodash";
 import {
   Arg,
   Ctx,
@@ -52,6 +53,18 @@ export class AppUserResolver {
         isSuperAdmin,
       } = options;
 
+      const findUser = await User.findOne({
+        where: { email: _.toLower(email) },
+      });
+
+      if (findUser && !_id) {
+        return {
+          success: false,
+          msg: "user exist using this email",
+          data: "",
+        };
+      }
+
       if (_id) {
         const findEmailCredential = await User.findOneOrFail({
           where: { _id: _id },
@@ -61,7 +74,7 @@ export class AppUserResolver {
         findEmailCredential.assignedDepartment = await Department.findOne({
           where: { _id: assignedDepartment },
         });
-        findEmailCredential.email = email;
+        findEmailCredential.email = _.toLower(email);
         findEmailCredential.hash = isEncryptedString(hash)
           ? hash
           : encryptedString(hash);
@@ -81,7 +94,7 @@ export class AppUserResolver {
         findEmailCredential.assignedDepartment = await Department.findOne({
           where: { _id: assignedDepartment },
         });
-        findEmailCredential.email = email;
+        findEmailCredential.email = _.toLower(email);
         findEmailCredential.hash = encryptedString(hash);
         findEmailCredential.isAdmin = isAdmin;
         findEmailCredential.isCompany = isCompany;
