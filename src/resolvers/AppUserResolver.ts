@@ -57,7 +57,7 @@ export class AppUserResolver {
         where: { email: _.toLower(email) },
       });
 
-      if (findUser) {
+      if (findUser && !_id) {
         return {
           success: false,
           msg: "user exist using this email",
