@@ -27,6 +27,9 @@ export class IAuthResoverResponse {
 
   @Field()
   name!: string;
+
+  @Field(() => User, { nullable: true })
+  user?: User | null;
 }
 
 @InputType()
@@ -57,6 +60,7 @@ export class UserResolver {
         jwt: "",
         msg: "cannot find the user",
         name: "",
+        user: null,
       };
     }
 
@@ -71,6 +75,7 @@ export class UserResolver {
         }),
         msg: "user authenticated successfully.",
         name: findUser.name,
+        user: findUser,
       };
     } else {
       return {
@@ -79,6 +84,7 @@ export class UserResolver {
         jwt: "",
         msg: "can not authenticate the user",
         name: "",
+        user: null,
       };
     }
   }

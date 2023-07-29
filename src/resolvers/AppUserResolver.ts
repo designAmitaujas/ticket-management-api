@@ -58,9 +58,9 @@ export class AppUserResolver {
         });
 
         findEmailCredential.name = name;
-        findEmailCredential.assignedDepartment = await Department.findOneOrFail(
-          { where: { _id: assignedDepartment } }
-        );
+        findEmailCredential.assignedDepartment = await Department.findOne({
+          where: { _id: assignedDepartment },
+        });
         findEmailCredential.email = email;
         findEmailCredential.hash = isEncryptedString(hash)
           ? hash
@@ -78,9 +78,9 @@ export class AppUserResolver {
         const findEmailCredential = new User();
 
         findEmailCredential.name = name;
-        findEmailCredential.assignedDepartment = await Department.findOneOrFail(
-          { where: { _id: assignedDepartment } }
-        );
+        findEmailCredential.assignedDepartment = await Department.findOne({
+          where: { _id: assignedDepartment },
+        });
         findEmailCredential.email = email;
         findEmailCredential.hash = encryptedString(hash);
         findEmailCredential.isAdmin = isAdmin;

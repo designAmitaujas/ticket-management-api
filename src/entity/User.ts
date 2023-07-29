@@ -82,7 +82,7 @@ export class User extends BaseEntity {
 
   @Field(() => Department, { nullable: true })
   @ManyToOne((type) => Department, { nullable: true })
-  assignedDepartment!: Department;
+  assignedDepartment?: Department | null;
 
   @Field()
   @Column({ default: false })

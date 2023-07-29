@@ -17,6 +17,10 @@ export const seedFunction = async () => {
     newUser.name = ADMIN_NAME;
     newUser.isAdmin = true;
     newUser.isSuperAdmin = true;
+    newUser.isCompany = false;
+    newUser.isCustomer = false;
+    newUser.isCustomer = false;
+    newUser.isMiddleMan = false;
     newUser.isActive = true;
     newUser.createdBy = newUser;
     newUser.updatedBy = newUser;
