@@ -6,7 +6,7 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-import { IsNull } from "typeorm";
+import { IsNull, Not } from "typeorm";
 import { Department } from "../entity/Department";
 import { DepartmentQuestions } from "../entity/DepartmentQuestion";
 import { ICreateTickets, Tickets } from "../entity/Tickets";
@@ -104,6 +104,7 @@ export class AppTicketResolver {
     return await Tickets.find({
       where: {
         department: { _id: user.assignedDepartment?._id || "" },
+        assignedMiddleMan: Not(IsNull()),
         assignedCompany: IsNull(),
       },
       relations: {
@@ -155,7 +156,7 @@ export class AppTicketResolver {
         },
       });
 
-      findTicket.assignedMiddleMan = user;
+      findTicket.assignedCompany = user;
       findTicket.updatedBy = user;
       await findTicket.save();
 

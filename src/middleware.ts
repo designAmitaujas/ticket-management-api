@@ -20,6 +20,7 @@ export const isUser: MiddlewareFn<MyContext> = async ({ context }, next) => {
     const token = jwt.verify(authorization, JWT_SECRET) as IJwtEncode;
     const user = await User.findOneOrFail({
       where: { _id: token.id, isActive: true },
+      relations: { assignedDepartment: true },
     });
 
     if (user) {
