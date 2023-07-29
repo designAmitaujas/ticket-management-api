@@ -1,14 +1,18 @@
 import _ from "lodash";
 import {
   Arg,
+  Ctx,
   Field,
   InputType,
   Mutation,
   ObjectType,
   Resolver,
+  UseMiddleware,
 } from "type-graphql";
 import { User } from "../entity/User";
-import { isPasswordValid } from "../utils/hash";
+import { isUser } from "../middleware";
+import { IStatusResponse, MyContext } from "../types";
+import { encryptedString, isPasswordValid } from "../utils/hash";
 import { signJwt } from "../utils/jwt";
 
 @ObjectType()
@@ -39,6 +43,15 @@ export class IAuthInput {
 
   @Field()
   password!: string;
+}
+
+@InputType()
+export class IChangePassword {
+  @Field()
+  oldPassword!: string;
+
+  @Field()
+  newPassword!: string;
 }
 
 @Resolver()
@@ -85,6 +98,54 @@ export class UserResolver {
         msg: "can not authenticate the user",
         name: "",
         user: null,
+      };
+    }
+  }
+
+  @Mutation(() => IStatusResponse)
+  @UseMiddleware([isUser])
+  async changePassword(
+    @Arg("options") options: IChangePassword,
+    @Ctx() { user }: MyContext
+  ): Promise<IStatusResponse> {
+    try {
+      const { newPassword, oldPassword } = options;
+
+      const findUser = await User.findOneOrFail({
+        where: { _id: user._id, isActive: true },
+      });
+
+      if (!findUser) {
+        return {
+          success: false,
+          msg: "can not find user",
+          data: "",
+        };
+      }
+
+      if (isPasswordValid(oldPassword, findUser.hash)) {
+        findUser.hash = encryptedString(newPassword);
+        findUser.updatedBy = user;
+
+        await findUser.save();
+
+        return {
+          success: true,
+          msg: "password updated successfully",
+          data: "",
+        };
+      } else {
+        return {
+          success: false,
+          msg: "password did not match",
+          data: "",
+        };
+      }
+    } catch (err) {
+      return {
+        success: false,
+        msg: "trouble updating user user",
+        data: "",
       };
     }
   }
