@@ -19,7 +19,7 @@ import { IGetByID, IStatusResponse, MyContext } from "../types";
 export class TicketBackAndForthResolver {
   @Query(() => [TicketBackAndForth])
   async getAllTicketBackAndForth(): Promise<TicketBackAndForth[]> {
-    return await TicketBackAndForth.find();
+    return await TicketBackAndForth.find({ relations: { ticket: true } });
   }
 
   @Query(() => TicketBackAndForth)
@@ -28,6 +28,17 @@ export class TicketBackAndForthResolver {
   ): Promise<TicketBackAndForth> {
     return await TicketBackAndForth.findOneOrFail({
       where: { _id: options.id },
+      relations: { ticket: true },
+    });
+  }
+
+  @Query(() => [TicketBackAndForth])
+  async getTicketBackAndForthByTiketId(
+    @Arg("options") options: IGetByID
+  ): Promise<TicketBackAndForth[]> {
+    return await TicketBackAndForth.find({
+      where: { _id: options.id },
+      relations: { ticket: true },
     });
   }
 

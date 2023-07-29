@@ -19,13 +19,28 @@ export class AppTicketResolver {
 
   @Query(() => [Tickets])
   async getAllTickets(): Promise<Tickets[]> {
-    return await Tickets.find();
+    return await Tickets.find({
+      relations: {
+        assignedCompany: true,
+        assignedCustomer: true,
+        assignedMiddleMan: true,
+        department: true,
+        departmentQuestion: true,
+      },
+    });
   }
 
   @Query(() => Tickets)
   async getTicketsById(@Arg("options") options: IGetByID): Promise<Tickets> {
     return await Tickets.findOneOrFail({
       where: { _id: options.id },
+      relations: {
+        assignedCompany: true,
+        assignedCustomer: true,
+        assignedMiddleMan: true,
+        department: true,
+        departmentQuestion: true,
+      },
     });
   }
 
