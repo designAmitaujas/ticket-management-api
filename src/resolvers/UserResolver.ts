@@ -63,7 +63,7 @@ export class UserResolver {
     const { email, password } = options;
 
     const findUser = await User.findOne({
-      where: { email: _.toLower(email), isActive: true, isAdmin: true },
+      where: { email: _.toLower(email), isActive: true },
     });
 
     if (!findUser) {
