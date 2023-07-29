@@ -71,6 +71,54 @@ export class AppTicketResolver {
     });
   }
 
+  @Mutation(() => IStatusResponse)
+  @UseMiddleware([isUser])
+  async acceptTiketByMiddleMan(
+    @Arg("options") options: IGetByID,
+    @Ctx() { user }: MyContext
+  ): Promise<IStatusResponse> {
+    try {
+      const findTicket = await Tickets.findOneOrFail({
+        where: {
+          _id: options.id,
+          department: { _id: user.assignedDepartment?._id || "" },
+          assignedMiddleMan: IsNull(),
+        },
+      });
+
+      findTicket.assignedMiddleMan = user;
+      findTicket.updatedBy = user;
+      await findTicket.save();
+
+      return { data: "", msg: "ticket accepted successfully", success: true };
+    } catch (err) {}
+    return { data: "", msg: "trouble assigning tasks", success: false };
+  }
+
+  @Mutation(() => IStatusResponse)
+  @UseMiddleware([isUser])
+  async acceptTiketByCompany(
+    @Arg("options") options: IGetByID,
+    @Ctx() { user }: MyContext
+  ): Promise<IStatusResponse> {
+    try {
+      const findTicket = await Tickets.findOneOrFail({
+        where: {
+          _id: options.id,
+          department: { _id: user.assignedDepartment?._id || "" },
+          assignedCompany: IsNull(),
+        },
+      });
+
+      findTicket.assignedMiddleMan = user;
+      findTicket.updatedBy = user;
+      await findTicket.save();
+
+      return { data: "", msg: "ticket accepted successfully", success: true };
+    } catch (err) {}
+    return { data: "", msg: "trouble assigning tasks", success: false };
+  }
+
   @Query(() => Tickets)
   async getTicketsById(@Arg("options") options: IGetByID): Promise<Tickets> {
     return await Tickets.findOneOrFail({
