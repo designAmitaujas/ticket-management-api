@@ -6,6 +6,7 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
+import { IsNull } from "typeorm";
 import { Department } from "../entity/Department";
 import { DepartmentQuestions } from "../entity/DepartmentQuestion";
 import { ICreateTickets, Tickets } from "../entity/Tickets";
@@ -20,6 +21,46 @@ export class AppTicketResolver {
   @Query(() => [Tickets])
   async getAllTickets(): Promise<Tickets[]> {
     return await Tickets.find({
+      relations: {
+        assignedCompany: true,
+        assignedCustomer: true,
+        assignedMiddleMan: true,
+        department: true,
+        departmentQuestion: true,
+      },
+    });
+  }
+
+  @Query(() => [Tickets])
+  @UseMiddleware([isUser])
+  async getAllAcceptAcceptByMiddleMan(
+    @Ctx() { user }: MyContext
+  ): Promise<Tickets[]> {
+    return await Tickets.find({
+      where: {
+        department: { _id: user.assignedDepartment?._id || "" },
+        assignedMiddleMan: IsNull(),
+      },
+      relations: {
+        assignedCompany: true,
+        assignedCustomer: true,
+        assignedMiddleMan: true,
+        department: true,
+        departmentQuestion: true,
+      },
+    });
+  }
+
+  @Query(() => [Tickets])
+  @UseMiddleware([isUser])
+  async getAllAcceptAcceptByCompany(
+    @Ctx() { user }: MyContext
+  ): Promise<Tickets[]> {
+    return await Tickets.find({
+      where: {
+        department: { _id: user.assignedDepartment?._id || "" },
+        assignedCompany: IsNull(),
+      },
       relations: {
         assignedCompany: true,
         assignedCustomer: true,
