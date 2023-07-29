@@ -1,7 +1,9 @@
 import {
   Arg,
   Ctx,
+  Field,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
   UseMiddleware,
@@ -14,6 +16,15 @@ import {
 import { Tickets } from "../entity/Tickets";
 import { isUser } from "../middleware";
 import { IGetByID, IStatusResponse, MyContext } from "../types";
+
+@ObjectType()
+export class CutomTicketResponse {
+  @Field(() => Tickets)
+  ticket!: Tickets;
+
+  @Field(() => [TicketBackAndForth])
+  ticketBackAndForth!: TicketBackAndForth[];
+}
 
 @Resolver()
 export class TicketBackAndForthResolver {
@@ -32,14 +43,30 @@ export class TicketBackAndForthResolver {
     });
   }
 
-  @Query(() => [TicketBackAndForth])
+  @Query(() => CutomTicketResponse)
   async getTicketBackAndForthByTiketId(
     @Arg("options") options: IGetByID
-  ): Promise<TicketBackAndForth[]> {
-    return await TicketBackAndForth.find({
+  ): Promise<CutomTicketResponse> {
+    const d1 = await Tickets.findOneOrFail({
       where: { _id: options.id },
+      relations: {
+        assignedCompany: true,
+        assignedCustomer: true,
+        assignedMiddleMan: true,
+        department: true,
+        departmentQuestion: true,
+      },
+    });
+
+    const d2 = await TicketBackAndForth.find({
+      where: { ticket: { _id: options.id } },
       relations: { ticket: true },
     });
+
+    return {
+      ticket: d1,
+      ticketBackAndForth: d2,
+    };
   }
 
   @Mutation(() => IStatusResponse)
