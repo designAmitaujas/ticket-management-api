@@ -19,26 +19,11 @@ import { upload } from "./config/multer.config";
 import { MAX_AGE } from "./constant";
 import { AppDataSource } from "./data-source";
 import { PORT } from "./env";
-import { BannerResolver } from "./resolvers/BannerResolver";
-import { BranchAchivementResovler } from "./resolvers/BranchAchivementResolver";
-import { ChairmanHistoryResolver } from "./resolvers/ChairmanHistoryResolver";
-import { CmsResolver } from "./resolvers/CmsResolver";
-import { CompanySetupResolver } from "./resolvers/CompanySetupResolver";
-import { DownloadResolver } from "./resolvers/DownloadResolver";
-import { EmailResolver } from "./resolvers/EmailResolver";
-import { EventResolver } from "./resolvers/EventResolver";
-import { FooterLinkResolver } from "./resolvers/FooterLinkResolver";
-import { GalleryResolver } from "./resolvers/GallaryResolver";
-import { HelloResolver } from "./resolvers/HelloResolver";
-import { HomePortalResolver } from "./resolvers/HomePortalResolver";
-import { IcaiTrainingResolver } from "./resolvers/IcaiTrainingResolver";
-import { MemberRegistrationManagementResolver } from "./resolvers/MemberRegistrationManagementResolver";
 // import { PaymentResolver } from "./resolvers/PaymentResolver";
-import { EventRegistrationResolver } from "./resolvers/EventRegistrationResolver";
-import { PublicationResolver } from "./resolvers/PublicationResolver";
+import { AppTicketResolver } from "./resolvers/AppTicketResolver";
+import { AppUserResolver } from "./resolvers/AppUserResolver";
+import { DepartmentResolver } from "./resolvers/DepartmentResolver";
 import { UserResolver } from "./resolvers/UserResolver";
-import { ManagingCommitteeResolver } from "./resolvers/managingCommitteeResolver";
-import { MenuResolver } from "./resolvers/menuResolver";
 import { seedFunction } from "./seed";
 import { cache } from "./utils";
 
@@ -57,26 +42,10 @@ import { cache } from "./utils";
     const [schema] = await Promise.all([
       buildSchema({
         resolvers: [
-          DownloadResolver,
-          EmailResolver,
-          FooterLinkResolver,
-          HelloResolver,
-          ManagingCommitteeResolver,
-          PublicationResolver,
+          AppTicketResolver,
+          AppUserResolver,
+          DepartmentResolver,
           UserResolver,
-          DownloadResolver,
-          GalleryResolver,
-          BannerResolver,
-          ChairmanHistoryResolver,
-          BranchAchivementResovler,
-          MenuResolver,
-          CmsResolver,
-          HomePortalResolver,
-          EventResolver,
-          IcaiTrainingResolver,
-          MemberRegistrationManagementResolver,
-          CompanySetupResolver,
-          EventRegistrationResolver,
         ],
       }),
       AppDataSource.initialize(),
