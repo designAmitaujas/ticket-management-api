@@ -33,6 +33,9 @@ export class ICreateTickets {
   description!: string;
 
   @Field()
+  mobile!: string;
+
+  @Field()
   file!: string;
 
   @Field()
@@ -69,6 +72,10 @@ export class Tickets extends BaseEntity {
   @Field()
   @Column()
   question!: string;
+
+  @Field()
+  @Column({ default: "" })
+  mobile!: string;
 
   @Field()
   @Column()

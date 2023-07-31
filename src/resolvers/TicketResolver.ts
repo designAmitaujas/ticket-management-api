@@ -143,7 +143,7 @@ export class TicketBackAndForthResolver {
 
     const d2 = await TicketBackAndForth.find({
       where: { ticket: { _id: options.id } },
-      relations: { ticket: true },
+      relations: { ticket: true, createdBy: true },
     });
 
     return {

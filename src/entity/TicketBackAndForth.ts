@@ -118,6 +118,7 @@ export class TicketBackAndForth extends BaseEntity {
   @Column({ default: false })
   isActive!: boolean;
 
+  @Field(() => User, { nullable: true })
   @ManyToOne((type) => User, { nullable: true })
   createdBy!: User;
 

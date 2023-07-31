@@ -198,6 +198,7 @@ export class AppTicketResolver {
         file,
         isResolved,
         question,
+        mobile,
       } = options;
 
       if (_id) {
@@ -222,6 +223,7 @@ export class AppTicketResolver {
             where: { _id: departmentQuestion },
           });
         findEmailCredential.description = description;
+        findEmailCredential.mobile = mobile;
         findEmailCredential.file = file;
         findEmailCredential.isResolved = isResolved;
         findEmailCredential.question = question;
@@ -247,6 +249,7 @@ export class AppTicketResolver {
           await DepartmentQuestions.findOneOrFail({
             where: { _id: departmentQuestion },
           });
+        findEmailCredential.mobile = mobile;
         findEmailCredential.description = description;
         findEmailCredential.file = file;
         findEmailCredential.isResolved = isResolved;
