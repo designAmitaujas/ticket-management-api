@@ -50,6 +50,9 @@ export class IAddTicketBackAndForth {
 
   @Field()
   ticketId!: string;
+
+  @Field()
+  canCompanyAccept!: boolean;
 }
 
 @ObjectType()
@@ -191,7 +194,17 @@ export class TicketBackAndForthResolver {
     @Arg("options") options: IAddTicketBackAndForth,
     @Ctx() { user }: MyContext
   ): Promise<IStatusResponse> {
-    const { file, nextChooice, questionReply, ticketId } = options;
+    const { file, nextChooice, questionReply, ticketId, canCompanyAccept } =
+      options;
+
+    if (canCompanyAccept === true) {
+      const findTicket = await Tickets.findOne({ where: { _id: ticketId } });
+
+      if (findTicket) {
+        findTicket.canCompanyAccept = true;
+        await findTicket.save();
+      }
+    }
 
     const newTicketBackAndForth = new TicketBackAndForth();
 

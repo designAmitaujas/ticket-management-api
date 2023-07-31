@@ -106,7 +106,9 @@ export class AppTicketResolver {
         department: { _id: user.assignedDepartment?._id || "" },
         assignedMiddleMan: Not(IsNull()),
         assignedCompany: IsNull(),
+        canCompanyAccept: true,
       },
+
       relations: {
         assignedCompany: true,
         assignedCustomer: true,

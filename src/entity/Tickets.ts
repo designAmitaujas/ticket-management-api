@@ -103,6 +103,10 @@ export class Tickets extends BaseEntity {
 
   @Field()
   @Column({ default: false })
+  canCompanyAccept!: boolean;
+
+  @Field()
+  @Column({ default: false })
   isActive!: boolean;
 
   @ManyToOne((type) => User, { nullable: true })
