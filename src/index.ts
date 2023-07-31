@@ -23,6 +23,7 @@ import { PORT } from "./env";
 import { AppTicketResolver } from "./resolvers/AppTicketResolver";
 import { AppUserResolver } from "./resolvers/AppUserResolver";
 import { DepartmentResolver } from "./resolvers/DepartmentResolver";
+import { EmailResolver } from "./resolvers/EmailResolver";
 import { TicketBackAndForthResolver } from "./resolvers/TicketResolver";
 import { UserResolver } from "./resolvers/UserResolver";
 import { seedFunction } from "./seed";
@@ -48,6 +49,7 @@ import { cache } from "./utils";
           DepartmentResolver,
           UserResolver,
           TicketBackAndForthResolver,
+          EmailResolver,
         ],
       }),
       AppDataSource.initialize(),
