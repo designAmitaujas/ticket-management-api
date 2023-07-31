@@ -52,11 +52,99 @@ export class IAddTicketBackAndForth {
   ticketId!: string;
 }
 
+@ObjectType()
+export class ICountResponse {
+  @Field()
+  totalTiketCount!: number;
+
+  @Field()
+  totalRunningCount!: number;
+
+  @Field()
+  totalClosedCount!: number;
+}
+
 @Resolver()
 export class TicketBackAndForthResolver {
   @Query(() => [TicketBackAndForth])
   async getAllTicketBackAndForth(): Promise<TicketBackAndForth[]> {
     return await TicketBackAndForth.find({ relations: { ticket: true } });
+  }
+
+  @Query(() => ICountResponse)
+  @UseMiddleware([isUser])
+  async getTicketCount(@Ctx() { user }: MyContext): Promise<ICountResponse> {
+    if (user.isCustomer) {
+      const [d1, d2, d3] = await Promise.all([
+        Tickets.find({
+          where: { createdBy: { _id: user._id } },
+        }),
+
+        Tickets.find({
+          where: { isResolved: true, createdBy: { _id: user._id } },
+        }),
+
+        Tickets.find({
+          where: { isResolved: false, createdBy: { _id: user._id } },
+        }),
+      ]);
+
+      return {
+        totalTiketCount: d1.length,
+        totalRunningCount: d3.length,
+        totalClosedCount: d2.length,
+      };
+    }
+
+    if (user.isMiddleMan) {
+      const d1 = await Tickets.find({
+        where: { assignedMiddleMan: { _id: user._id } },
+      });
+      const d2 = await Tickets.find({
+        where: { isResolved: true, assignedMiddleMan: { _id: user._id } },
+      });
+      const d3 = await Tickets.find({
+        where: { isResolved: false, assignedMiddleMan: { _id: user._id } },
+      });
+
+      return {
+        totalTiketCount: d1.length,
+        totalRunningCount: d3.length,
+        totalClosedCount: d2.length,
+      };
+    }
+
+    if (user.isCompany) {
+      const d1 = await Tickets.find({
+        where: { assignedCompany: { _id: user._id } },
+      });
+      const d2 = await Tickets.find({
+        where: { isResolved: true, assignedCompany: { _id: user._id } },
+      });
+      const d3 = await Tickets.find({
+        where: { isResolved: false, assignedCompany: { _id: user._id } },
+      });
+
+      return {
+        totalTiketCount: d1.length,
+        totalRunningCount: d3.length,
+        totalClosedCount: d2.length,
+      };
+    }
+
+    const d1 = await Tickets.find();
+    const d2 = await Tickets.find({
+      where: { isResolved: true },
+    });
+    const d3 = await Tickets.find({
+      where: { isResolved: false },
+    });
+
+    return {
+      totalTiketCount: d1.length,
+      totalRunningCount: d3.length,
+      totalClosedCount: d2.length,
+    };
   }
 
   @Mutation(() => IStatusResponse)
