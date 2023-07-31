@@ -1,3 +1,19 @@
+// import { DataSource } from "typeorm";
+// import { entityPath } from "./constant";
+
+// export const AppDataSource = new DataSource({
+//   type: "mysql",
+//   host: "localhost",
+//   username: "posdelta_db",
+//   password: "posdelta_db",
+//   database: "posdelta_db",
+//   synchronize: true,
+//   logging: false,
+//   entities: [entityPath],
+//   subscribers: [],
+//   migrations: [],
+// });
+
 import { DataSource } from "typeorm";
 import { entityPath } from "./constant";
 
