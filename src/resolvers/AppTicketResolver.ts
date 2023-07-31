@@ -1,3 +1,4 @@
+import moment from "moment";
 import {
   Arg,
   Ctx,
@@ -13,6 +14,7 @@ import { ICreateTickets, Tickets } from "../entity/Tickets";
 import { User } from "../entity/User";
 import { isUser } from "../middleware";
 import { IGetByID, IStatusResponse, MyContext } from "../types";
+import { sendEmail } from "../utils/emails";
 
 @Resolver()
 export class AppTicketResolver {
@@ -138,6 +140,28 @@ export class AppTicketResolver {
       findTicket.updatedBy = user;
       await findTicket.save();
 
+      await sendEmail({
+        customId: "##SEND_TICKET##",
+        from: "design@amitaujas.com",
+        to: `${findTicket.assignedCustomer?.email} ${findTicket.assignedMiddleMan?.email} ${findTicket.assignedCompany?.email}`,
+        replaceArray: [
+          { substr: "##CURRENT_DATE##", to: moment().format("DD/MM/YYYY") },
+          {
+            substr: "##QUERY_TITLE##",
+            to: findTicket.question,
+          },
+          {
+            substr: "##ASSIGN_TEXT##",
+            to: `${user.name} is accepted your ticket`,
+          },
+          {
+            substr: "##CURRENT_YEAR##",
+            to: moment().year().toString(),
+          },
+        ],
+        subject: "[Amitaujas LLP] Ticket Update",
+      });
+
       return { data: "", msg: "ticket accepted successfully", success: true };
     } catch (err) {}
     return { data: "", msg: "trouble assigning tasks", success: false };
@@ -161,6 +185,28 @@ export class AppTicketResolver {
       findTicket.assignedCompany = user;
       findTicket.updatedBy = user;
       await findTicket.save();
+
+      await sendEmail({
+        customId: "##SEND_TICKET##",
+        from: "design@amitaujas.com",
+        to: `${findTicket.assignedCustomer?.email} ${findTicket.assignedMiddleMan?.email} ${findTicket.assignedCompany?.email}`,
+        replaceArray: [
+          { substr: "##CURRENT_DATE##", to: moment().format("DD/MM/YYYY") },
+          {
+            substr: "##QUERY_TITLE##",
+            to: findTicket.question,
+          },
+          {
+            substr: "##ASSIGN_TEXT##",
+            to: `${user.name} is accepted your ticket`,
+          },
+          {
+            substr: "##CURRENT_YEAR##",
+            to: moment().year().toString(),
+          },
+        ],
+        subject: "[Amitaujas LLP] Ticket Update",
+      });
 
       return { data: "", msg: "ticket accepted successfully", success: true };
     } catch (err) {}

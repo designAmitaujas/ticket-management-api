@@ -11,6 +11,7 @@ import {
   registerEnumType,
 } from "type-graphql";
 
+import moment from "moment";
 import {
   ICreateTicketBackAndForth,
   TicketBackAndForth,
@@ -18,6 +19,7 @@ import {
 import { Tickets } from "../entity/Tickets";
 import { isUser } from "../middleware";
 import { IGetByID, IStatusResponse, MyContext } from "../types";
+import { sendEmail } from "../utils/emails";
 
 enum Direction {
   USER = "USER",
@@ -197,12 +199,36 @@ export class TicketBackAndForthResolver {
     const { file, nextChooice, questionReply, ticketId, canCompanyAccept } =
       options;
 
-    if (canCompanyAccept === true) {
-      const findTicket = await Tickets.findOne({ where: { _id: ticketId } });
+    const findTicket = await Tickets.findOneOrFail({
+      where: { _id: ticketId },
+    });
 
+    if (canCompanyAccept === true) {
       if (findTicket) {
         findTicket.canCompanyAccept = true;
         await findTicket.save();
+
+        await sendEmail({
+          customId: "##SEND_TICKET##",
+          from: "design@amitaujas.com",
+          to: `${findTicket.assignedCustomer?.email} ${findTicket.assignedMiddleMan?.email} ${findTicket.assignedCompany?.email}`,
+          replaceArray: [
+            { substr: "##CURRENT_DATE##", to: moment().format("DD/MM/YYYY") },
+            {
+              substr: "##QUERY_TITLE##",
+              to: findTicket.question,
+            },
+            {
+              substr: "##ASSIGN_TEXT##",
+              to: "Your query is transferd to Tridot",
+            },
+            {
+              substr: "##CURRENT_YEAR##",
+              to: moment().year().toString(),
+            },
+          ],
+          subject: "[Amitaujas LLP] Ticket Update",
+        });
       }
     }
 
@@ -223,6 +249,28 @@ export class TicketBackAndForthResolver {
     newTicketBackAndForth.updatedBy = user;
 
     await newTicketBackAndForth.save();
+
+    await sendEmail({
+      customId: "##SEND_TICKET##",
+      from: "design@amitaujas.com",
+      to: `${findTicket.assignedCustomer?.email} ${findTicket.assignedMiddleMan?.email} ${findTicket.assignedCompany?.email}`,
+      replaceArray: [
+        { substr: "##CURRENT_DATE##", to: moment().format("DD/MM/YYYY") },
+        {
+          substr: "##QUERY_TITLE##",
+          to: findTicket.question,
+        },
+        {
+          substr: "##ASSIGN_TEXT##",
+          to: `${user.name} is added replay to your question please check it on your portal`,
+        },
+        {
+          substr: "##CURRENT_YEAR##",
+          to: moment().year().toString(),
+        },
+      ],
+      subject: "[Amitaujas LLP] Ticket Update",
+    });
 
     return { success: true, data: "data added successfully", msg: "" };
   }
