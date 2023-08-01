@@ -210,7 +210,7 @@ export class AppTicketResolver {
 
       return { data: "", msg: "ticket accepted successfully", success: true };
     } catch (err) {}
-    return { data: "", msg: "trouble assigning tasks", success: false };
+    return { data: "", msg: "This the email error", success: false };
   }
 
   @Query(() => Tickets)
