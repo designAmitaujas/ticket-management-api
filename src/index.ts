@@ -22,6 +22,7 @@ import { PORT } from "./env";
 // import { PaymentResolver } from "./resolvers/PaymentResolver";
 import { AppTicketResolver } from "./resolvers/AppTicketResolver";
 import { AppUserResolver } from "./resolvers/AppUserResolver";
+import { ClosedReasonResolver } from "./resolvers/CloseReasonResolver";
 import { DepartmentResolver } from "./resolvers/DepartmentResolver";
 import { EmailResolver } from "./resolvers/EmailResolver";
 import { TicketBackAndForthResolver } from "./resolvers/TicketResolver";
@@ -52,6 +53,7 @@ import { cache } from "./utils";
           TicketBackAndForthResolver,
           EmailResolver,
           TicketTransferResolver,
+          ClosedReasonResolver,
         ],
       }),
       AppDataSource.initialize(),

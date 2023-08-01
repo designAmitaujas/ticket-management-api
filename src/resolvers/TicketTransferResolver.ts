@@ -25,6 +25,7 @@ export class TicketTransferResolver {
         assignedDepartment: { _id: user.assignedDepartment?._id },
         isCompany: user.isCompany,
         isMiddleMan: user.isMiddleMan,
+        isActive: true,
       },
       relations: {
         assignedDepartment: true,
@@ -38,7 +39,7 @@ export class TicketTransferResolver {
     @Arg("options") options: ICreateTransfetHistory,
     @Ctx() { user }: MyContext
   ): Promise<IStatusResponse> {
-    const { ticket, transferdUser } = options;
+    const { ticket, transferdUser, reason } = options;
 
     const findTicker = await Tickets.findOneOrFail({ where: { _id: ticket } });
     const findOtherUser = await User.findOneOrFail({
@@ -57,6 +58,7 @@ export class TicketTransferResolver {
 
     const newTicketTransfer = new TransfetHistory();
     newTicketTransfer.ticket = findTicker;
+    newTicketTransfer.reason = reason;
     newTicketTransfer.currentUsesr = user;
     newTicketTransfer.transferdUser = findOtherUser;
     newTicketTransfer.createdBy = user;
