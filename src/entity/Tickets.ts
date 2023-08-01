@@ -11,6 +11,7 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { ClosedReason } from "./ClosedReson";
 import { Department } from "./Department";
 import { DepartmentQuestions } from "./DepartmentQuestion";
 import { User } from "./User";
@@ -88,6 +89,10 @@ export class Tickets extends BaseEntity {
   @Field()
   @Column({ default: false })
   isResolved!: boolean;
+
+  @Field(() => ClosedReason, { nullable: true })
+  @ManyToOne((type) => ClosedReason, { nullable: true })
+  closedReason!: ClosedReason | null;
 
   @Field(() => User, { nullable: true })
   @ManyToOne((type) => User, { nullable: true })

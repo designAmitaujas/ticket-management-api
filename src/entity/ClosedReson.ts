@@ -11,46 +11,30 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Tickets } from "./Tickets";
 import { User } from "./User";
 
 @InputType()
-export class ICreateTransfetHistory {
+export class ICreateClosedReason {
   @Field({ nullable: true })
   _id?: string;
 
   @Field()
-  ticket!: string;
+  name!: string;
 
   @Field()
-  reason!: string;
-
-  @Field()
-  transferdUser!: string;
+  isActive!: boolean;
 }
 
 @Entity()
 @ObjectType()
-export class TransfetHistory extends BaseEntity {
+export class ClosedReason extends BaseEntity {
   @Field()
   @PrimaryColumn()
   _id!: string;
 
   @Field()
   @Column()
-  reason!: string;
-
-  @Field()
-  @ManyToOne((type) => Tickets, { nullable: true })
-  ticket!: Tickets;
-
-  @Field()
-  @ManyToOne((type) => User, { nullable: true })
-  currentUsesr!: User;
-
-  @Field()
-  @ManyToOne((type) => User, { nullable: true })
-  transferdUser!: User;
+  name!: string;
 
   @Field()
   @Column({ default: false })
