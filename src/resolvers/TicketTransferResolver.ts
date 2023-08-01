@@ -25,6 +25,7 @@ export class TicketTransferResolver {
         assignedDepartment: { _id: user.assignedDepartment?._id },
         isCompany: user.isCompany,
         isMiddleMan: user.isMiddleMan,
+        isActive: true,
       },
       relations: {
         assignedDepartment: true,
