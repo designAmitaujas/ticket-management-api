@@ -1,3 +1,4 @@
+import moment from "moment";
 import {
   Arg,
   Ctx,
@@ -10,8 +11,7 @@ import {
   UseMiddleware,
   registerEnumType,
 } from "type-graphql";
-
-import moment from "moment";
+import { ClosedReason } from "../entity/ClosedReson";
 import {
   ICreateTicketBackAndForth,
   TicketBackAndForth,
@@ -67,6 +67,15 @@ export class ICountResponse {
 
   @Field()
   totalClosedCount!: number;
+}
+
+@InputType()
+export class ICloseInput {
+  @Field()
+  ticket!: string;
+
+  @Field()
+  reason!: string;
 }
 
 @Resolver()
@@ -168,6 +177,39 @@ export class TicketBackAndForthResolver {
 
     const findV2 = await Tickets.findOneOrFail({
       where: { _id: options.id },
+    });
+
+    return {
+      success: findV2.isResolved,
+      data: "",
+      msg:
+        findV2.isResolved === true
+          ? "Ticket Is Closed Successfully"
+          : "Ticket Is Opend Successfully",
+    };
+  }
+
+  @Mutation(() => IStatusResponse)
+  @UseMiddleware([isUser])
+  async getTickerClosedByMiddleMan(
+    @Arg("options") options: ICloseInput,
+    @Ctx() { user }: MyContext
+  ): Promise<IStatusResponse> {
+    const { reason, ticket } = options;
+
+    const findTicket = await Tickets.findOneOrFail({
+      where: { _id: ticket },
+    });
+
+    findTicket.isResolved = !findTicket.isResolved;
+    findTicket.closedReason = await ClosedReason.findOneOrFail({
+      where: { _id: reason },
+    });
+    findTicket.updatedBy = user;
+    await findTicket.save();
+
+    const findV2 = await Tickets.findOneOrFail({
+      where: { _id: ticket },
     });
 
     return {
