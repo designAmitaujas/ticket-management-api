@@ -125,6 +125,7 @@ export class TicketBackAndForth extends BaseEntity {
   @ManyToOne((type) => User, { nullable: true })
   updatedBy!: User;
 
+  @Field()
   @CreateDateColumn()
   createdAt!: Date;
 
