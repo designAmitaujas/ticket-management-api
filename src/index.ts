@@ -25,6 +25,7 @@ import { AppUserResolver } from "./resolvers/AppUserResolver";
 import { DepartmentResolver } from "./resolvers/DepartmentResolver";
 import { EmailResolver } from "./resolvers/EmailResolver";
 import { TicketBackAndForthResolver } from "./resolvers/TicketResolver";
+import { TicketTransferResolver } from "./resolvers/TicketTransferResolver";
 import { UserResolver } from "./resolvers/UserResolver";
 import { seedFunction } from "./seed";
 import { cache } from "./utils";
@@ -50,6 +51,7 @@ import { cache } from "./utils";
           UserResolver,
           TicketBackAndForthResolver,
           EmailResolver,
+          TicketTransferResolver,
         ],
       }),
       AppDataSource.initialize(),
