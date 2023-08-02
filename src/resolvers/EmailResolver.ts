@@ -153,7 +153,6 @@ export class EmailResolver {
         });
 
         findEmailTemplate.name = name;
-        findEmailTemplate.name = name;
         findEmailTemplate.html = html;
         findEmailTemplate.isActive = isActive;
         findEmailTemplate.customId = customId;
@@ -166,7 +165,6 @@ export class EmailResolver {
       } else {
         const findEmailTemplate = new EmailTemplate();
 
-        findEmailTemplate.name = name;
         findEmailTemplate.name = name;
         findEmailTemplate.html = html;
         findEmailTemplate.isActive = isActive;
