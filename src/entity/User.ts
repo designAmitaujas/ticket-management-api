@@ -46,6 +46,9 @@ export class ICreateUser {
   isSuperAdmin!: boolean;
 
   @Field()
+  isManaging!: boolean;
+
+  @Field()
   isActive!: boolean;
 }
 
@@ -83,6 +86,10 @@ export class User extends BaseEntity {
   @Field(() => Department, { nullable: true })
   @ManyToOne((type) => Department, { nullable: true })
   assignedDepartment?: Department | null;
+
+  @Field()
+  @Column({ default: false })
+  isManaging!: boolean;
 
   @Field()
   @Column({ default: false })
