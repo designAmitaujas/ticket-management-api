@@ -121,6 +121,40 @@ export class AppTicketResolver {
     });
   }
 
+  @Query(() => [Tickets])
+  @UseMiddleware([isUser])
+  async getAllAcceptAcceptByAdmin(
+    @Ctx() { user }: MyContext
+  ): Promise<Tickets[]> {
+    if (user.isCompany) {
+      return await Tickets.find({
+        where: {
+          assignedMiddleMan: Not(IsNull()),
+          assignedCompany: IsNull(),
+          canCompanyAccept: true,
+        },
+
+        relations: {
+          assignedCompany: true,
+          assignedCustomer: true,
+          assignedMiddleMan: true,
+          department: true,
+          departmentQuestion: true,
+        },
+      });
+    } else {
+      return await Tickets.find({
+        relations: {
+          assignedCompany: true,
+          assignedCustomer: true,
+          assignedMiddleMan: true,
+          department: true,
+          departmentQuestion: true,
+        },
+      });
+    }
+  }
+
   @Mutation(() => IStatusResponse)
   @UseMiddleware([isUser])
   async acceptTiketByMiddleMan(
