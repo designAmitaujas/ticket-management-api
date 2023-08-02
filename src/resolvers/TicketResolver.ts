@@ -11,6 +11,7 @@ import {
   UseMiddleware,
   registerEnumType,
 } from "type-graphql";
+import { IsNull } from "typeorm";
 import { ClosedReason } from "../entity/ClosedReson";
 import {
   ICreateTicketBackAndForth,
@@ -67,6 +68,21 @@ export class ICountResponse {
 
   @Field()
   totalClosedCount!: number;
+}
+
+@ObjectType()
+export class ICountAdminResponse {
+  @Field()
+  totalTiketCount!: number;
+
+  @Field()
+  totalRunningCount!: number;
+
+  @Field()
+  totalClosedCount!: number;
+
+  @Field()
+  notAcceptedCount!: number;
 }
 
 @InputType()
@@ -158,6 +174,59 @@ export class TicketBackAndForthResolver {
       totalTiketCount: d1.length,
       totalRunningCount: d3.length,
       totalClosedCount: d2.length,
+    };
+  }
+
+  @Query(() => ICountAdminResponse)
+  @UseMiddleware([isUser])
+  async getAdminTicketCount(
+    @Ctx() { user }: MyContext
+  ): Promise<ICountAdminResponse> {
+    if (user.isMiddleMan) {
+      const d1 = await Tickets.find();
+      const d2 = await Tickets.find({
+        where: { isResolved: true },
+      });
+      const d3 = await Tickets.find({
+        where: { isResolved: false },
+      });
+      const d4 = await Tickets.find({
+        where: { assignedMiddleMan: IsNull() },
+      });
+
+      return {
+        totalTiketCount: d1.length,
+        totalRunningCount: d3.length,
+        totalClosedCount: d2.length,
+        notAcceptedCount: d4.length,
+      };
+    }
+
+    if (user.isCompany) {
+      const d1 = await Tickets.find();
+      const d2 = await Tickets.find({
+        where: { isResolved: true },
+      });
+      const d3 = await Tickets.find({
+        where: { isResolved: false },
+      });
+      const d4 = await Tickets.find({
+        where: { isResolved: false, assignedCompany: IsNull() },
+      });
+
+      return {
+        totalTiketCount: d1.length,
+        totalRunningCount: d3.length,
+        totalClosedCount: d2.length,
+        notAcceptedCount: d4.length,
+      };
+    }
+
+    return {
+      totalTiketCount: 0,
+      totalRunningCount: 0,
+      totalClosedCount: 0,
+      notAcceptedCount: 0,
     };
   }
 
