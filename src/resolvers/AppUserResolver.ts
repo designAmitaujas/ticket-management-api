@@ -51,6 +51,7 @@ export class AppUserResolver {
         isCustomer,
         isMiddleMan,
         isSuperAdmin,
+        isManaging,
       } = options;
 
       const findUser = await User.findOne({
@@ -81,9 +82,9 @@ export class AppUserResolver {
         findEmailCredential.isAdmin = isAdmin;
         findEmailCredential.isCompany = isCompany;
         findEmailCredential.isCustomer = isCustomer;
+        findEmailCredential.isManaging = isManaging;
         findEmailCredential.isMiddleMan = isMiddleMan;
         findEmailCredential.isSuperAdmin = isSuperAdmin;
-
         findEmailCredential.isActive = isActive;
         findEmailCredential.updatedBy = user;
         await findEmailCredential.save();
@@ -99,6 +100,7 @@ export class AppUserResolver {
         findEmailCredential.isAdmin = isAdmin;
         findEmailCredential.isCompany = isCompany;
         findEmailCredential.isCustomer = isCustomer;
+        findEmailCredential.isManaging = isManaging;
         findEmailCredential.isMiddleMan = isMiddleMan;
         findEmailCredential.isSuperAdmin = isSuperAdmin;
 
